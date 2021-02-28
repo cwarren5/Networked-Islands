@@ -1534,7 +1534,7 @@ GameObject:
   - component: {fileID: 343397630}
   m_Layer: 0
   m_Name: Cylinder (4)
-  m_TagString: island
+  m_TagString: glacier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3313,7 +3313,7 @@ GameObject:
   - component: {fileID: 635993834}
   m_Layer: 0
   m_Name: Cylinder (3)
-  m_TagString: island
+  m_TagString: glacier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3711,7 +3711,7 @@ GameObject:
   - component: {fileID: 712176684}
   m_Layer: 0
   m_Name: Cylinder (5)
-  m_TagString: island
+  m_TagString: glacier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5594,7 +5594,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_RenderPostProcessing: 0
-  m_Antialiasing: 0
+  m_Antialiasing: 2
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -9037,7 +9037,7 @@ GameObject:
   - component: {fileID: 1750500978}
   m_Layer: 0
   m_Name: Cylinder (6)
-  m_TagString: island
+  m_TagString: glacier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

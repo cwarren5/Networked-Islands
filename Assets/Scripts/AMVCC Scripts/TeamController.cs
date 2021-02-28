@@ -9,6 +9,7 @@ public class TeamController : IslandsElement
     private Realtime _realtime;
     private NetworkSyncManager globalTurnSync;
     private GameObject personalTimer = default;
+    private GameObject teamPlacard;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,8 +29,7 @@ public class TeamController : IslandsElement
         {
             Realtime.Destroy(personalTimer);
         }
-        app.uiView.YourTeamPlacards[(int)teamData.teamColor].SetActive(false);
-        app.uiView.OpponentPlacards[(int)teamData.teamColor].SetActive(false);
+        teamPlacard.SetActive(false);
     }
 
     void PrepairTeamForTurn(int turnNumber, GameRefModel.BoatColors turnColor)
@@ -75,11 +75,13 @@ public class TeamController : IslandsElement
     {
         if (teamData.teamColor == app.gameRefModel.localTeam)
         {
-            app.uiView.YourTeamPlacards[(int)teamData.teamColor].SetActive(true);
+            teamPlacard = app.uiView.YourTeamPlacards[(int)teamData.teamColor];
+            teamPlacard.SetActive(true);
         }
         else
         {
-            app.uiView.OpponentPlacards[(int)teamData.teamColor].SetActive(true);
+            teamPlacard = app.uiView.OpponentPlacards[(int)teamData.teamColor];
+            teamPlacard.SetActive(true);
         }
     }
 }

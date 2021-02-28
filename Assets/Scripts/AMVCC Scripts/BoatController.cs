@@ -187,11 +187,12 @@ public class BoatController : IslandsElement
 
     private void InitiateSelfDestruct()
     {
-        //Instantiate(explodingParticlesPrefab, transform.position, Quaternion.identity); //probably needs to be instantiated in Realtime;
         myTeam.boatList.Remove(gameObject);
         myTeam.UpdateBoatCount();
         //localReferee.CheckForWinner();//Should be done at the team level
         Destroy(myBoatPlan);
+        //GameObject boatExplosion = Realtime.Instantiate(prefabName: "Boat Explosion", ownedByClient: true, preventOwnershipTakeover: true, useInstance: app.realtime);
+        //boatExplosion.transform.position = new Vector3(transform.position.x, boatExplosion.transform.position.y, transform.position.z);
         Realtime.Destroy(gameObject);
     }
     private void InitiateNextPlayerTurn()
