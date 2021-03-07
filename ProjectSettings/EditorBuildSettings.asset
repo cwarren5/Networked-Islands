@@ -14,7 +14,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Default-Level.unity
     guid: 45f430f776e8374498c917b1109a7e7f
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/AMVCC test.unity
     guid: 36b8314f492232a4b9f8c075c601b933
+  - enabled: 1
+    path: Assets/Scenes/Sand Level.unity
+    guid: 154f30a245609e64ea0b169f38d6539a
   m_configObjects: {}

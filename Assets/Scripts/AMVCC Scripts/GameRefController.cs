@@ -15,6 +15,8 @@ public class GameRefController : IslandsElement
 
         // Notify us when Realtime successfully connects to the room
         _realtime.didConnectToRoom += DidConnectToRoom;
+        NetworkSyncManager.OnNetworkGameStateUpdate += OnGameStateUpdate;
+        NetworkSyncManager.OnNetworkTurnUpdate += OnTurnUpdate;
     }
 
     private void DidConnectToRoom(Realtime realtime)
@@ -40,7 +42,6 @@ public class GameRefController : IslandsElement
 
             
             app.gameRefModel.localTeam = GameRefModel.BoatColors.Yellow;
-            //localRef.ConnectYellow();
         }
 
         if (_realtime.clientID == 1)
@@ -61,7 +62,6 @@ public class GameRefController : IslandsElement
 
            
             app.gameRefModel.localTeam = GameRefModel.BoatColors.Red;
-            //localRef.ConnectRed();
         }
     }
 
@@ -90,4 +90,67 @@ public class GameRefController : IslandsElement
         app.networkSyncManager.UpdateNetworkedTurn(newTurn);
         app.networkSyncManager.UpdateNetworkedTurnState(GameRefModel.TurnState.Thinking);
     }
+
+    public void UpdateGameStartStatus()
+    {
+        if (app.gameRefModel.yellowTeamModel != null && app.gameRefModel.redTeamModel != null)
+        {
+            Debug.Log("this is ACTUALLY WORKING");
+            app.networkSyncManager.UpdateNetworkedGameState(GameRefModel.GameState.GamePlaying);
+        }
+        else
+        {
+            app.networkSyncManager.UpdateNetworkedGameState(GameRefModel.GameState.GameMatching);
+        }
+    }
+
+    private void OnGameStateUpdate(int gameStateNumber, GameRefModel.GameState gameState)
+    {
+        if(gameState == GameRefModel.GameState.GameMatching)
+        {
+            app.uiView.gameStatusText.text = "WAITING FOR PLAYERS";
+        }
+        if (gameState == GameRefModel.GameState.GamePlaying)
+        {
+            UpdateTurnText();
+        }
+        if (gameState == GameRefModel.GameState.GameOver)
+        {
+            if(app.gameRefModel.localTeamModel.boatCount == 0)
+            {
+                app.uiView.gameStatusText.text = "YOU LOSE";
+            }
+            else
+            {
+                app.uiView.gameStatusText.text = "YOU WIN!";
+            }
+            app.uiView.playAgain.SetActive(true);
+        }
+    }
+
+    private void OnTurnUpdate(int turnNumber, GameRefModel.BoatColors turnColor)
+    {
+        if (app.networkSyncManager.currentGameState == GameRefModel.GameState.GamePlaying)
+        {
+            UpdateTurnText();
+        }
+    }
+    
+    private void UpdateTurnText()
+    {
+        if (app.networkSyncManager.currentSyncedTurnColor == GameRefModel.BoatColors.Yellow)
+        {
+            app.uiView.gameStatusText.text = "YELLOW'S TURN";
+        }
+        if (app.networkSyncManager.currentSyncedTurnColor == GameRefModel.BoatColors.Red)
+        {
+            app.uiView.gameStatusText.text = "RED'S TURN";
+        }
+    }
+
+    public void SomeoneLostTheGame(GameRefModel.BoatColors losingColor)
+    {
+        app.networkSyncManager.UpdateNetworkedGameState(GameRefModel.GameState.GameOver);
+    }
 }
+ 

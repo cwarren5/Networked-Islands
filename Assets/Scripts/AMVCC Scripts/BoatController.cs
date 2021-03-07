@@ -30,7 +30,7 @@ public class BoatController : IslandsElement
     private int timeOut = 0;
     private bool turnMonitor = true;
 
-    PlanController plan;
+    public PlanController plan;
 
     void Start()
     {
@@ -39,6 +39,7 @@ public class BoatController : IslandsElement
         myBoatView = GetComponent<BoatView>();
         realtimeView = GetComponent<RealtimeView>();
         NetworkSyncManager.OnNetworkTurnUpdate += BoatActiviation;
+        NetworkSyncManager.OnNetworkGameStateUpdate += GameStart;
         if (realtimeView.isOwnedLocallyInHierarchy)
         {
             GetComponent<RealtimeTransform>().RequestOwnership();
@@ -62,8 +63,8 @@ public class BoatController : IslandsElement
         {         
             //Instantiates and stores the PlanController
             myBoatPlan = Instantiate(planPrefab, transform.position, Quaternion.identity);
-            myBoatPlan.SetActive(false);
             plan = myBoatPlan.GetComponent<PlanController>();
+            myBoatPlan.SetActive(false);         
             myBoatView.turnHighlighter.SetActive(false);
             BoatActiviation(app.networkSyncManager.currentTurnStateNumber, app.networkSyncManager.currentSyncedTurnColor);
             plan.myTeamModel = myTeam;
@@ -81,6 +82,7 @@ public class BoatController : IslandsElement
 
     void Update()
     {
+        //Could make movement a different script so that update isn't always running
         if (realtimeView.isOwnedLocallyInHierarchy)
         {
             if (plan.running) //this probably needs to change
@@ -90,12 +92,17 @@ public class BoatController : IslandsElement
                 LayBomb();//could this be in PlayBoatAlongPath?
                 LayMine();//could this be in PlayBoatAlongPath?
             }
+            if (Input.GetKeyDown("m"))
+            {
+                Debug.Log("THERE WAS A MASSECRE");
+                InitiateSelfDestruct();
+            }
         }
     }
 
     private void BoatActiviation(int turnNumber, GameRefModel.BoatColors turnColor)
     {
-        if (realtimeView.isOwnedLocallyInHierarchy)
+        if (realtimeView.isOwnedLocallyInHierarchy && app.networkSyncManager.currentGameState == GameRefModel.GameState.GamePlaying)
         {
             if (myTeamColor == turnColor)
             {
@@ -107,6 +114,28 @@ public class BoatController : IslandsElement
                 myBoatPlan.SetActive(false);
                 myBoatView.turnHighlighter.SetActive(false);
             }
+        }
+    }
+
+    private void GameStart(int gameStateNumber, GameRefModel.GameState gameState)
+    {
+        if (realtimeView.isOwnedLocallyInHierarchy && app.networkSyncManager.currentGameState == GameRefModel.GameState.GamePlaying)
+        {
+            if (myTeamColor == app.networkSyncManager.currentSyncedTurnColor)
+            {
+                myBoatPlan.SetActive(true);
+                myBoatView.turnHighlighter.SetActive(true);
+            }
+            else
+            {
+                myBoatPlan.SetActive(false);
+                myBoatView.turnHighlighter.SetActive(false);
+            }
+        }
+        if (realtimeView.isOwnedLocallyInHierarchy && app.networkSyncManager.currentGameState == GameRefModel.GameState.GameOver)
+        {
+            myBoatPlan.SetActive(false);
+            myBoatView.turnHighlighter.SetActive(false);
         }
     }
 
@@ -216,16 +245,14 @@ public class BoatController : IslandsElement
 
     private void LayMine()
     {
-        /* Revisit all this
-        if (pathScript.minePosition == runPosition && !localReferee.usedMine[(int)boatColor] && pathScript.droppedMine)
+        if (plan.minePosition == runPosition && !myTeam.hasMine)
         {
-            GameObject myBomb = Instantiate(mine, transform.position, Quaternion.identity);
-            myBomb.transform.SetParent(gameObject.transform.parent);
-            localReferee.usedMine[(int)boatColor] = true;
-            localReferee.teamMines[(int)boatColor]--;
-            localReferee.UpdateMineDisplay();
-            pathScript.droppedMine = false;
+            GameObject placedMine = Realtime.Instantiate(prefabName: "Water Mine", ownedByClient: true, preventOwnershipTakeover: true, useInstance: app.realtime);
+            placedMine.transform.position = transform.position;
+            myTeam.totalMines -= 1;
+            //this is to make sure is doesn't place more than one
+            myTeam.hasMine = true;
         }
-        */
+        
     }
 }

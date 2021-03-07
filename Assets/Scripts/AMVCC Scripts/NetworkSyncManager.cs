@@ -12,12 +12,12 @@ public class NetworkSyncManager : RealtimeComponent<GameManagementModel>
 
     public int currentTurnStateNumber = 0;
     public GameRefModel.TurnState currentTurnState = (GameRefModel.TurnState)0;
-    public delegate void TurnStateUpdateEvent(int turnNumber, GameRefModel.TurnState turnColor);
+    public delegate void TurnStateUpdateEvent(int turnStateNumber, GameRefModel.TurnState turnState);
     public static event TurnStateUpdateEvent OnNetworkTurnStateUpdate;
 
     public int currentGameStateNumber = 0;
     public GameRefModel.GameState currentGameState = (GameRefModel.GameState)0;
-    public delegate void GameStateUpdateEvent(int turnNumber, GameRefModel.GameState turnColor);
+    public delegate void GameStateUpdateEvent(int gameStateNumber, GameRefModel.GameState gameState);
     public static event GameStateUpdateEvent OnNetworkGameStateUpdate;
 
 
@@ -119,7 +119,7 @@ public class NetworkSyncManager : RealtimeComponent<GameManagementModel>
 
     private void UpdateGameState()
     {
-        currentGameStateNumber = model.playerTurn;
+        currentGameStateNumber = model.gameState;
         currentGameState = (GameRefModel.GameState)currentGameStateNumber;
         if (OnNetworkGameStateUpdate != null)
         {

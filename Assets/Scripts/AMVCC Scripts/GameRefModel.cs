@@ -7,7 +7,7 @@ public class GameRefModel : IslandsElement
     public float flattenSpeed = 1.0f;
     public float boatSpeed = 10.0f;
     public int drawnLineLength = 50;
-    public int startingMines = 0;
+    public int startingMines = 1;
     public float bombBlastRadius = 4.0f;
 
     //global enums
@@ -22,8 +22,9 @@ public class GameRefModel : IslandsElement
     public GameObject minePrefab;
     public Transform[] yellowStartPositions = new Transform[3];
     public Transform[] redStartPositions = new Transform[3];
-    public TeamModel yellowTeamModel;
-    public TeamModel redTeamModel;
+    public TeamModel yellowTeamModel = default;
+    public TeamModel redTeamModel = default;
+    public TeamModel localTeamModel = default;
 
     void Start()
     {

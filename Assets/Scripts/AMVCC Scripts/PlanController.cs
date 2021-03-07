@@ -12,8 +12,6 @@ public class PlanController : IslandsElement
     [SerializeField] private float lineFidelity = .25f;
 
     private LineRenderer boatPath;
-    public bool hasBomb = false;
-    public bool droppedMine = false;
     public List<Vector3> points = new List<Vector3>();
     public Action<IEnumerable<Vector3>> OnNewPathCreated = delegate { };
     private Vector3 mOffset;
@@ -42,6 +40,10 @@ public class PlanController : IslandsElement
         boatPath.enabled = true;
         app.terrainController.planning = true;
         app.networkSyncManager.UpdateNetworkedTurnState(GameRefModel.TurnState.Planning);
+        if(myTeamModel.totalMines > 0)
+        {
+            myTeamModel.hasMine = true;
+        }
     }
 
     void OnMouseDrag()
@@ -122,13 +124,13 @@ public class PlanController : IslandsElement
             myTeamModel.hasBomb = false;
             // bombIcon.SetActive(false);
         }
-        /*if (Input.GetKeyDown("m") && pressed && !localReferee.usedMine[(int)localReferee.currentTurn])
+        if (Input.GetKeyDown("m") && myTeamModel.hasMine)
         {
-            activeMineM = Instantiate(mineM, points[points.Count - 1], Quaternion.identity);
+            app.uiView.planMine.SetActive(true);
+            app.uiView.planMine.transform.position = points[points.Count - 1];
             minePosition = points.Count - 1;
-            droppedMine = true;
-            //localReferee.usedMine[0] = true;
-            //bombIcon.SetActive(false);
-        }*/
+            myTeamModel.yourMineButton.SetActive(true);
+            myTeamModel.hasMine = false;
+        }
     }
 }
