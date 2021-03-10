@@ -62,6 +62,7 @@ public class PlanController : IslandsElement
         app.terrainController.planning = false;
         app.networkSyncManager.UpdateNetworkedTurnState(GameRefModel.TurnState.Executing);
         app.uiView.planBomb.SetActive(false);
+        app.uiView.planMine.SetActive(false);
         //Destroy(activeBombX);
         //Destroy(activeMineM);
     }

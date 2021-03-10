@@ -92,11 +92,6 @@ public class BoatController : IslandsElement
                 LayBomb();//could this be in PlayBoatAlongPath?
                 LayMine();//could this be in PlayBoatAlongPath?
             }
-            if (Input.GetKeyDown("m"))
-            {
-                Debug.Log("THERE WAS A MASSECRE");
-                InitiateSelfDestruct();
-            }
         }
     }
 
@@ -200,6 +195,19 @@ public class BoatController : IslandsElement
             {
                 InitiateSelfDestruct();
             }
+
+            if (hitTag == "minePickup")
+            {
+                Realtime.Destroy(hitObject);
+                myTeam.totalMines++;
+                myTeam.UpdateMineCountDisplay();
+            }
+
+            if (hitTag == "mine")
+            {
+                    InitiateSelfDestruct();
+                    Realtime.Destroy(hitObject);
+            }
         }
     }
 
@@ -218,7 +226,6 @@ public class BoatController : IslandsElement
     {
         myTeam.boatList.Remove(gameObject);
         myTeam.UpdateBoatCount();
-        //localReferee.CheckForWinner();//Should be done at the team level
         Destroy(myBoatPlan);
         //GameObject boatExplosion = Realtime.Instantiate(prefabName: "Boat Explosion", ownedByClient: true, preventOwnershipTakeover: true, useInstance: app.realtime);
         //boatExplosion.transform.position = new Vector3(transform.position.x, boatExplosion.transform.position.y, transform.position.z);
@@ -247,10 +254,11 @@ public class BoatController : IslandsElement
     {
         if (plan.minePosition == runPosition && !myTeam.hasMine)
         {
-            GameObject placedMine = Realtime.Instantiate(prefabName: "Water Mine", ownedByClient: true, preventOwnershipTakeover: true, useInstance: app.realtime);
-            placedMine.transform.position = transform.position;
+            GameObject placedMine = Realtime.Instantiate(prefabName: "Mine", ownedByClient: true, preventOwnershipTakeover: true, useInstance: app.realtime);
+            placedMine.GetComponent<RealtimeTransform>().RequestOwnership();
+            placedMine.transform.position = transform.position;           
             myTeam.totalMines -= 1;
-            //this is to make sure is doesn't place more than one
+            myTeam.UpdateMineCountDisplay();
             myTeam.hasMine = true;
         }
         

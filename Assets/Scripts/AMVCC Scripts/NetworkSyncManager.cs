@@ -20,6 +20,9 @@ public class NetworkSyncManager : RealtimeComponent<GameManagementModel>
     public delegate void GameStateUpdateEvent(int gameStateNumber, GameRefModel.GameState gameState);
     public static event GameStateUpdateEvent OnNetworkGameStateUpdate;
 
+    public int currentTotalTurns = 0;
+    public delegate void TotalTurnUpdateEvent(int totalTurns);
+    public static event TotalTurnUpdateEvent OnNetworkTotalTurnUpdate;
 
 
     protected override void OnRealtimeModelReplaced(GameManagementModel previousModel, GameManagementModel currentModel)
@@ -30,6 +33,7 @@ public class NetworkSyncManager : RealtimeComponent<GameManagementModel>
             previousModel.playerTurnDidChange -= PlayerTurnDidChange;
             previousModel.turnStateDidChange -= TurnStateDidChange;
             previousModel.gameStateDidChange -= GameStateDidChange;
+            previousModel.totalTurnsDidChange -= TotalTurnsDidChange;
         }
 
         if (currentModel != null)
@@ -40,17 +44,20 @@ public class NetworkSyncManager : RealtimeComponent<GameManagementModel>
                 currentModel.playerTurn = currentSyncedTurn;
                 currentModel.turnState = currentTurnStateNumber;
                 currentModel.gameState = currentGameStateNumber;
+                currentModel.totalTurns = currentTotalTurns;
             }
 
             // Update the mesh render to match the new model
             UpdateTurn();
             UpdateTurnState();
             UpdateGameState();
+            UpdateTotalTurns();
 
             // Register for events so we'll know if the color changes later
             currentModel.playerTurnDidChange += PlayerTurnDidChange;
             currentModel.turnStateDidChange += TurnStateDidChange;
             currentModel.gameStateDidChange += GameStateDidChange;
+            currentModel.totalTurnsDidChange += TotalTurnsDidChange;
 
         }
     }
@@ -69,6 +76,7 @@ public class NetworkSyncManager : RealtimeComponent<GameManagementModel>
     {
         currentSyncedTurn = model.playerTurn;
         currentSyncedTurnColor = (GameRefModel.BoatColors)currentSyncedTurn;
+        IncreaseTurnCount();
         if (OnNetworkTurnUpdate != null)
         {
             OnNetworkTurnUpdate(currentSyncedTurn, currentSyncedTurnColor);
@@ -130,5 +138,28 @@ public class NetworkSyncManager : RealtimeComponent<GameManagementModel>
     public void UpdateNetworkedGameState(GameRefModel.GameState newGameState)
     {
         model.gameState = (int)newGameState;
+    }
+
+
+
+
+    //Total Turn Methods
+    private void TotalTurnsDidChange(GameManagementModel model, int value)
+    {
+        UpdateTotalTurns();
+    }
+
+    private void UpdateTotalTurns()
+    {
+        currentTotalTurns = model.totalTurns;
+        if (OnNetworkTotalTurnUpdate != null)
+        {
+            OnNetworkTotalTurnUpdate(currentTotalTurns);
+        }
+    }
+
+    public void IncreaseTurnCount()
+    {
+        model.totalTurns += 1;
     }
 }

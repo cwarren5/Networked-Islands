@@ -8,6 +8,8 @@ TagManager:
   - sand
   - glacier
   - bomb
+  - minePickup
+  - mine
   layers:
   - Default
   - TransparentFX

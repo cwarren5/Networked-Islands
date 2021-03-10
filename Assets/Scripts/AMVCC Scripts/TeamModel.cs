@@ -32,4 +32,17 @@ public class TeamModel : IslandsElement
             app.gameRefController.SomeoneLostTheGame(teamColor);
         }
     }
+
+    public void UpdateMineCountDisplay()
+    {
+        if (teamColor == GameRefModel.BoatColors.Yellow)
+        {
+            app.uiView.yellowMineText.text = "" + totalMines;
+
+        }
+        if (teamColor == GameRefModel.BoatColors.Red)
+        {
+            app.uiView.redMineText.text = "" + totalMines;
+        }
+    }
 }
