@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: d1c3109bdb54ad54c8a2b2838528e640
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Chat Bay.unity
     guid: d77ad7f590f0aa340a3580129a55eca2
   - enabled: 0
@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Sand Level.unity
     guid: 154f30a245609e64ea0b169f38d6539a
+  - enabled: 1
+    path: Assets/Scenes/Glacier Level.unity
+    guid: 81f20c7ab9cc4e8468bca6034cba5c91
   m_configObjects: {}

@@ -18,7 +18,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: roof
-    second: {fileID: 2100000, guid: 25a45e772a451d246b15c3aa2ac9735a, type: 2}
+    second: {fileID: 2100000, guid: 7f4d96638317cf0499f04147566e6661, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

@@ -205,8 +205,8 @@ public class BoatController : IslandsElement
 
             if (hitTag == "mine")
             {
-                    InitiateSelfDestruct();
-                    Realtime.Destroy(hitObject);
+                InitiateSelfDestruct();
+                Realtime.Destroy(hitObject);
             }
         }
     }
