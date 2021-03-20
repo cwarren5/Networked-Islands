@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Normal.Realtime;
 
 public class BoatMover : MonoBehaviour
@@ -17,7 +18,8 @@ public class BoatMover : MonoBehaviour
     private Rigidbody boatRigid;
     [SerializeField] private float speed = 1.0f;
     [SerializeField] private GameRef.BoatColors boatColor = GameRef.BoatColors.Yellow;
-    private GameRef localRef;
+    [SerializeField] private GameObject highlighter = default;
+    //private GameRef localRef;
     //Multiplayer
     private RealtimeView _realtimeView;
     private Realtime _realtime;
@@ -33,14 +35,16 @@ public class BoatMover : MonoBehaviour
         if (_realtimeView.isOwnedLocallyInHierarchy)
         {
             GetComponent<RealtimeTransform>().RequestOwnership();
+            highlighter.SetActive(true);
         }
-        localRef = FindObjectOfType<GameRef>();
-        localRef.AddToBoatList(gameObject, boatColor);
+        else { highlighter.SetActive(false); }
+        //localRef = FindObjectOfType<GameRef>();
+        //localRef.AddToBoatList(gameObject, boatColor);
     }
 
     void Update()
     {
-        if (_realtimeView.isOwnedLocallyInHierarchy && (int)boatColor == _globalTurnSync.currentSyncedTurn)
+        if (_realtimeView.isOwnedLocallyInHierarchy)
         {
             if (running)
             {
@@ -74,7 +78,7 @@ public class BoatMover : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (_realtimeView.isOwnedLocallyInHierarchy && (int)boatColor == _globalTurnSync.currentSyncedTurn)
+        if (_realtimeView.isOwnedLocallyInHierarchy)
         {
             points.Clear();
             boatPath.SetPositions(points.ToArray());
@@ -86,7 +90,7 @@ public class BoatMover : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if (_realtimeView.isOwnedLocallyInHierarchy && (int)boatColor == _globalTurnSync.currentSyncedTurn)
+        if (_realtimeView.isOwnedLocallyInHierarchy)
         {
             //Debug.Log(GetMouseAsWorldPoint() + mOffset);
             Vector3 mousePoint = GetMouseAsWorldPoint() + mOffset;
@@ -102,9 +106,9 @@ public class BoatMover : MonoBehaviour
 
     void OnMouseUp()
     {
-        if (_realtimeView.isOwnedLocallyInHierarchy && (int)boatColor == _globalTurnSync.currentSyncedTurn)
+        if (_realtimeView.isOwnedLocallyInHierarchy)
         {
-            Invoke("StartBoatMovement", 0.5f); //Todo - Attach to flatten speed
+            Invoke("StartBoatMovement", 0.1f); //Todo - Attach to flatten speed
             boatPath.enabled = false;
         }
     }
