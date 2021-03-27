@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Glacier Level.unity
     guid: 81f20c7ab9cc4e8468bca6034cba5c91
+  - enabled: 1
+    path: Assets/Scenes/Sunset Level.unity
+    guid: 29ec3da207abb2440b9790fe8d80e015
   m_configObjects: {}
